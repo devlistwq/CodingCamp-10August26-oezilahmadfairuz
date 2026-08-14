@@ -1,0 +1,758 @@
+/* =============================================
+   RESET & BASE
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- MODE TERANG (default) ---------- */
+:root {
+  --bg-from:        #6a5fc1;
+  --bg-to:          #a78bda;
+  --surface:        #ffffff;
+  --border:         #e8e8f0;
+  --text-primary:   #1a1a2e;
+  --text-secondary: #6b6b8a;
+  --accent:         #5b5fc7;
+  --accent-hover:   #4a4eb8;
+  --danger:         #e05252;
+  --danger-hover:   #c94040;
+  --success:        #3dba7a;
+  --ghost-bg:       #eeeef8;
+  --ghost-hover:    #ddddf0;
+  --input-bg:       #ffffff;
+  --radius:         12px;
+  --shadow:         0 4px 20px rgba(0, 0, 0, 0.08);
+  --font:           'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ----------   MODE GELAP ---------- */
+body.dark {
+  --bg-from:        #0d0d1a;
+  --bg-to:          #1a0a2e;
+  --surface:        rgba(30, 28, 60, 0.85);
+  --border:         rgba(140, 130, 255, 0.18);
+  --text-primary:   #f0eeff;
+  --text-secondary: #a0a0c8;
+  --accent:         #9b8fff;
+  --accent-hover:   #8878f0;
+  --ghost-bg:       rgba(120, 110, 220, 0.18);
+  --ghost-hover:    rgba(120, 110, 220, 0.32);
+  --input-bg:       rgba(15, 14, 35, 0.8);
+  --shadow:         0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+body {
+  font-family: var(--font);
+  background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
+  min-height: 100vh;
+  padding: 48px 40px 80px;
+  color: var(--text-primary);
+  transition: background 0.4s, color 0.3s;
+}
+
+/* Dark mode: background lebih kaya dengan 3 titik warna */
+body.dark {
+  background: linear-gradient(
+    135deg,
+    #0d0d1a 0%,
+    #1a0a2e 40%,
+    #0a1a35 100%
+  );
+}
+
+/* =============================================
+   THEME TOGGLE BUTTON
+   ============================================= */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 20px;
+  z-index: 200;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, transform 0.15s;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* =============================================
+   LAYOUT WRAPPER
+   ============================================= */
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* =============================================
+   GREETING CARD (top, full width)
+   ============================================= */
+.greeting-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px 48px 36px;
+  text-align: center;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* Dark mode glassmorphism */
+body.dark .greeting-card {
+  background: rgba(40, 36, 80, 0.75);
+  border: 1px solid rgba(160, 140, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.clock {
+  font-size: 4.5rem;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.date {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.greeting {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Row yang menampung greeting + tombol edit */
+.greeting-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Tombol pensil edit nama */
+.btn-edit-name {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  opacity: 0.45;
+  transition: opacity 0.15s, transform 0.15s;
+  line-height: 1;
+}
+
+.btn-edit-name:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Baris input nama (muncul saat edit) */
+.name-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.name-input-row.hidden {
+  display: none;
+}
+
+.name-input {
+  width: auto;
+  max-width: 220px;
+  text-align: center;
+}
+
+/* =============================================
+   MIDDLE ROW  (timer left | tasks right)
+   ============================================= */
+.middle-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+/* =============================================
+   CARD (shared)
+   ============================================= */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* Dark mode: card dengan glassmorphism — jelas terpisah dari background */
+body.dark .card {
+  background: rgba(40, 36, 80, 0.75);
+  border: 1px solid rgba(160, 140, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+body.dark .card:hover {
+  border-color: rgba(160, 140, 255, 0.38);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
+              0 0 0 1px rgba(155, 143, 255, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+/* Header row: title + sort dropdown side by side */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-header .card-title {
+  margin-bottom: 0;
+}
+
+.sort-select {
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: var(--font);
+  color: var(--text-primary);
+  background: var(--input-bg);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, background 0.3s, color 0.3s;
+}
+
+.sort-select:focus {
+  border-color: var(--accent);
+}
+
+body.dark .sort-select {
+  border-color: rgba(140, 130, 255, 0.25);
+}
+
+/* =============================================
+   FOCUS TIMER
+   ============================================= */
+#timer-section {
+  text-align: center;
+}
+
+/* Ghost icon button (settings gear) */
+.btn-icon-ghost {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  opacity: 0.5;
+  transition: opacity 0.15s, transform 0.15s;
+  line-height: 1;
+}
+
+.btn-icon-ghost:hover {
+  opacity: 1;
+  transform: rotate(30deg);
+}
+
+/* Mode tab buttons */
+.timer-modes {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.timer-mode-btn {
+  padding: 5px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.8rem;
+  font-family: var(--font);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.timer-mode-btn:hover {
+  background: var(--ghost-bg);
+  color: var(--text-primary);
+}
+
+.timer-mode-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* Settings panel */
+.timer-settings-panel {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+
+.timer-settings-panel.hidden {
+  display: none;
+}
+
+.settings-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.settings-fields {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: default;
+}
+
+.input-num {
+  text-align: center;
+  padding: 7px 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.timer-display {
+  font-size: 5rem;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  margin: 8px 0 28px;
+  line-height: 1;
+}
+
+.timer-display.running {
+  color: var(--accent);
+}
+
+.timer-display.finished {
+  color: var(--success);
+  font-size: 2.4rem;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  padding: 5px 14px;
+  font-size: 0.8rem;
+}
+
+.btn-danger:hover {
+  background: var(--danger-hover);
+}
+
+.btn-ghost {
+  background: var(--ghost-bg);
+  color: var(--text-primary);
+  border: none;
+}
+
+.btn-ghost:hover {
+  background: var(--ghost-hover);
+}
+
+/* =============================================
+   INPUT FIELDS
+   ============================================= */
+.input-field {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: var(--font);
+  color: var(--text-primary);
+  background: var(--input-bg);
+  outline: none;
+  transition: border-color 0.15s, background 0.3s, color 0.3s;
+  width: 100%;
+}
+
+.input-field:focus {
+  border-color: var(--accent);
+}
+
+body.dark .input-field {
+  border-color: rgba(140, 130, 255, 0.25);
+}
+
+body.dark .input-field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(155, 143, 255, 0.2);
+}
+
+body.dark .modal {
+  background: rgba(30, 26, 65, 0.95);
+  border: 1px solid rgba(160, 140, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* =============================================
+   TO-DO LIST
+   ============================================= */
+.todo-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.todo-input-row .input-field {
+  flex: 1;
+}
+
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.todo-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item.done .todo-text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.todo-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 0.95rem;
+  word-break: break-word;
+  color: var(--text-primary);
+}
+
+.todo-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* Edit task button — pensil kecil */
+.btn-edit-task {
+  font-size: 0.9rem;
+  padding: 4px 6px;
+  opacity: 0.45;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.btn-edit-task:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* =============================================
+   QUICK LINKS
+   ============================================= */
+.links-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.links-input-row .input-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.link-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--accent);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+  min-width: 140px;
+  max-width: 220px;
+}
+
+.link-chip:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* Wrapper teks nama + url */
+.link-chip-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Nama link — putih tebal */
+.link-chip-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* URL keterangan — putih redup kecil */
+.link-chip-url {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+  transition: color 0.15s;
+}
+
+.link-delete:hover {
+  color: #fff;
+}
+
+/* =============================================
+   EDIT MODAL
+   ============================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(2px);
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px;
+  width: min(90%, 400px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.modal h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.modal .input-field {
+  margin-bottom: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* =============================================
+   EMPTY STATE
+   ============================================= */
+.empty-state {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  padding: 12px 0;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 860px) {
+  body {
+    padding: 32px 20px 64px;
+  }
+
+  .middle-row {
+    grid-template-columns: 1fr;
+  }
+
+  .clock {
+    font-size: 3.2rem;
+  }
+
+  .timer-display {
+    font-size: 3.6rem;
+  }
+
+  .links-input-row {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 20px 14px 48px;
+  }
+
+  .clock {
+    font-size: 2.4rem;
+  }
+
+  .timer-display {
+    font-size: 2.8rem;
+  }
+
+  .greeting-card {
+    padding: 28px 20px 24px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}

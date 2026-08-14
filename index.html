@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== THEME TOGGLE ===== -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+
+  <div class="wrapper">
+
+    <!-- ===== GREETING CARD ===== -->
+    <div class="greeting-card">
+      <div id="current-time" class="clock">00:00:00</div>
+      <p id="current-date" class="date"></p>
+      <div class="greeting-row">
+        <h1 id="greeting" class="greeting"></h1>
+        <button id="edit-name-btn" class="btn-edit-name" aria-label="Edit name">✏️</button>
+      </div>
+      <!-- Inline name input (shown when editing) -->
+      <div id="name-input-row" class="name-input-row hidden">
+        <input
+          type="text"
+          id="name-input"
+          class="input-field name-input"
+          placeholder="Enter your name..."
+          maxlength="40"
+        />
+        <button id="name-save-btn" class="btn btn-primary">Save</button>
+        <button id="name-cancel-btn" class="btn btn-ghost">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ===== MIDDLE ROW: Timer + Tasks ===== -->
+    <div class="middle-row">
+
+      <!-- Focus Timer -->
+      <section class="card" id="timer-section">
+        <div class="card-header">
+          <h2 class="card-title">Focus Timer</h2>
+          <button id="timer-settings-btn" class="btn-icon-ghost" aria-label="Timer settings">⚙️</button>
+        </div>
+
+        <!-- Mode tabs -->
+        <div class="timer-modes">
+          <button class="timer-mode-btn active" data-mode="focus">Focus</button>
+          <button class="timer-mode-btn" data-mode="break">Break</button>
+          <button class="timer-mode-btn" data-mode="longbreak">Long Break</button>
+        </div>
+
+        <div id="timer-display" class="timer-display">25:00</div>
+        <div class="timer-controls">
+          <button id="timer-start" class="btn btn-primary">Start</button>
+          <button id="timer-stop"  class="btn btn-ghost">Stop</button>
+          <button id="timer-reset" class="btn btn-ghost">Reset</button>
+        </div>
+
+        <!-- Settings panel (hidden by default) -->
+        <div id="timer-settings-panel" class="timer-settings-panel hidden">
+          <p class="settings-label">Set durations (minutes)</p>
+          <div class="settings-fields">
+            <label class="settings-field">
+              <span>Focus</span>
+              <input type="number" id="set-focus" class="input-field input-num" min="1" max="120" value="25" />
+            </label>
+            <label class="settings-field">
+              <span>Break</span>
+              <input type="number" id="set-break" class="input-field input-num" min="1" max="60" value="5" />
+            </label>
+            <label class="settings-field">
+              <span>Long Break</span>
+              <input type="number" id="set-longbreak" class="input-field input-num" min="1" max="60" value="15" />
+            </label>
+          </div>
+          <div class="settings-actions">
+            <button id="timer-settings-save" class="btn btn-primary">Save</button>
+            <button id="timer-settings-cancel" class="btn btn-ghost">Cancel</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tasks -->
+      <section class="card" id="todo-section">
+        <div class="card-header">
+          <h2 class="card-title">Tasks</h2>
+          <select id="sort-select" class="sort-select" aria-label="Sort tasks">
+            <option value="default">Default</option>
+            <option value="az">A → Z</option>
+            <option value="za">Z → A</option>
+            <option value="active">Active first</option>
+            <option value="done">Done first</option>
+          </select>
+        </div>
+        <div class="todo-input-row">
+          <input
+            type="text"
+            id="todo-input"
+            class="input-field"
+            placeholder="Add a new task..."
+            maxlength="120"
+          />
+          <button id="todo-add" class="btn btn-primary">Add</button>
+        </div>
+        <ul id="todo-list" class="todo-list"></ul>
+      </section>
+
+    </div>
+
+    <!-- ===== QUICK LINKS ===== -->
+    <section class="card" id="links-section">
+      <h2 class="card-title">Quick Links</h2>
+      <div class="links-input-row">
+        <input
+          type="text"
+          id="link-name-input"
+          class="input-field"
+          placeholder="Link name"
+          maxlength="40"
+        />
+        <input
+          type="url"
+          id="link-url-input"
+          class="input-field"
+          placeholder="URL"
+        />
+        <button id="link-add" class="btn btn-primary">Add Link</button>
+      </div>
+      <div id="links-list" class="links-list"></div>
+    </section>
+
+  </div>
+
+  <!-- ===== EDIT TASK MODAL ===== -->
+  <div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>Edit Task</h3>
+      <input type="text" id="edit-input" class="input-field" maxlength="120" />
+      <div class="modal-actions">
+        <button id="edit-save"   class="btn btn-primary">Save</button>
+        <button id="edit-cancel" class="btn btn-ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
